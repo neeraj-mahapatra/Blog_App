@@ -1,40 +1,41 @@
-package com.example.blogapp.splash
+package com.example.blogapp.signup.view
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.TextView
 import com.example.blogapp.MainActivity
 import com.example.blogapp.R
-import com.example.blogapp.databinding.FragmentSplashBinding
+import com.example.blogapp.databinding.FragmentHomeBinding
+import com.example.blogapp.databinding.FragmentLogInBinding
+import com.example.blogapp.databinding.FragmentSignUpBinding
 import com.example.blogapp.home.view.HomeFragment
 import com.example.blogapp.login.view.LogInFragment
 
 
-class SplashFragment : Fragment() {
+class SignUpFragment : Fragment() {
 
-    private var _binding: FragmentSplashBinding? = null
+    private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
-    private lateinit var imageView: ImageView
-    private lateinit var menuIcon: ImageView
+    private lateinit var signUp_Text: TextView
 
     private val onClickListener = View.OnClickListener { view ->
         when (view) {
+            signUp_Text -> {
+                replaceFragment(LogInFragment())
+            }
         }
     }
 
     private fun inits() {
-        imageView = binding.splashImage
-        menuIcon = (context as MainActivity).findViewById(R.id.menu_icon)
+        signUp_Text = binding.signUpText
     }
 
     private fun setListeners() {
-
+        signUp_Text.setOnClickListener(onClickListener)
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -43,38 +44,38 @@ class SplashFragment : Fragment() {
             .commit()
     }
 
-    private fun splashAnimation() {
-        val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.splash_animation)
-        imageView.startAnimation(animation)
-        Handler(Looper.getMainLooper()).postDelayed({
-            replaceFragment(LogInFragment())
-        }, animation.duration)
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).showMenuIcon(false)
     }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as MainActivity).showMenuIcon(true)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentSplashBinding.inflate(inflater, container, false)
-
+        _binding = FragmentSignUpBinding.inflate(inflater, container, false)
         return (binding.root)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         inits()
-        menuIcon.visibility = View.GONE
         setListeners()
-        splashAnimation()
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
     }
 
     companion object {
-        fun newInstance() = SplashFragment()
+        fun newInstance() = SignUpFragment()
     }
+
 }

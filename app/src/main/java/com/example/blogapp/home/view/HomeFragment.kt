@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance() = SplashFragment()
+        fun newInstance() = HomeFragment()
     }
 
 }

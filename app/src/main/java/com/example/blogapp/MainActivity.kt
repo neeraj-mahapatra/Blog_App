@@ -62,4 +62,8 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
+
+    fun showMenuIcon(show: Boolean) {
+        menuIcon.visibility = if (show) View.VISIBLE else View.GONE
+    }
 }
