@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import com.example.blogapp.databinding.ActivityMainBinding
 import com.example.blogapp.splash.SplashFragment
 
@@ -46,18 +47,18 @@ class MainActivity : AppCompatActivity() {
         menuIcon.setOnClickListener(onClickListener)
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         inits()
-        loadInitialFragment()
         setListeners()
+        replaceFragment(SplashFragment())
     }
 
-    // Load the initial fragment into the FrameLayout
-    private fun loadInitialFragment() {
-        val fragment = SplashFragment()
+
+    private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
