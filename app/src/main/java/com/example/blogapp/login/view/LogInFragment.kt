@@ -48,7 +48,6 @@ class LogInFragment : Fragment() {
                             userDocRef.get().addOnSuccessListener { documentSnapshot ->
                                 val status = documentSnapshot.getBoolean("status")
                                 if (status == false) {
-                                    replaceFragment(UserDataInputFragment())
                                     // Update user status to true in Firestore
                                     userDocRef.update("status", true)
                                         .addOnSuccessListener {
@@ -57,6 +56,7 @@ class LogInFragment : Fragment() {
                                         .addOnFailureListener { exception ->
                                             Log.d("message", "Error updating user status: ${exception.message}")
                                         }
+                                    replaceFragment(UserDataInputFragment())
                                 } else {
                                     replaceFragment(HomeFragment())
                                 }
@@ -90,7 +90,6 @@ class LogInFragment : Fragment() {
     private fun replaceFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
             .commit()
     }
 

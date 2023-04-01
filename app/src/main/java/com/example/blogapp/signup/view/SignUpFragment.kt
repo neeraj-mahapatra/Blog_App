@@ -48,7 +48,11 @@ class SignUpFragment : Fragment() {
                             val userData = hashMapOf(
                                 "email" to user?.email,
                                 "uid" to user?.uid,
-                                "status" to false
+                                "status" to false,
+                                "fullName" to "",
+                                "userName" to "",
+                                "description" to "",
+                                "userImage" to ""
                             )
                             val db = FirebaseFirestore.getInstance()
                             db.collection("users").document(user?.uid ?: "")
@@ -86,7 +90,6 @@ class SignUpFragment : Fragment() {
     private fun replaceFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
             .commit()
     }
 

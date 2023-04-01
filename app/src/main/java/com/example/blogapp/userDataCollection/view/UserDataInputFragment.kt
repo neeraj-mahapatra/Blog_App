@@ -1,41 +1,132 @@
 package com.example.blogapp.userDataCollection.view
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import com.example.blogapp.MainActivity
 import com.example.blogapp.R
-import com.example.blogapp.databinding.FragmentSignUpBinding
 import com.example.blogapp.databinding.FragmentUserDataInputBinding
-import com.example.blogapp.login.view.LogInFragment
-import com.example.blogapp.signup.view.SignUpFragment
-import com.google.firebase.auth.FirebaseAuth
+import com.example.blogapp.home.view.HomeFragment
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 
 
 class UserDataInputFragment : Fragment() {
 
     private var _binding: FragmentUserDataInputBinding? = null
     private val binding get() = _binding!!
+    private lateinit var userImageView: ImageView
+    private lateinit var userFullName: EditText
+    private lateinit var userUserName: EditText
+    private lateinit var userDescription: EditText
+    private lateinit var userSubmitButton: Button
+    private lateinit var storageRef: StorageReference
+    private lateinit var db: FirebaseFirestore
+    private var imageUri: Uri? = null // stores the selected image Uri
 
 
     private val onClickListener = View.OnClickListener { view ->
         when (view) {
-
+            userImageView -> {
+                //here user can upload image
+                selectImage()
+            }
+            userSubmitButton -> {
+                //collect all data and send to the firestore
+                val fullName = userFullName.text.toString().trim()
+                val userName = userUserName.text.toString().trim()
+                val description = userDescription.text.toString().trim()
+                uploadUserDataToFirestore(fullName, userName, description)
+            }
         }
     }
 
     private fun inits() {
+        userImageView = binding.userInputImage
+        userFullName = binding.userInputFullName
+        userUserName = binding.userInputUserName
+        userDescription = binding.userInputDesc
+        userSubmitButton = binding.submitButton
+        storageRef = Firebase.storage.reference.child("users/${Firebase.auth.currentUser?.uid}/profile_image")
+        db = Firebase.firestore
     }
 
     private fun setListeners() {
-
+        userImageView.setOnClickListener(onClickListener)
+        userSubmitButton.setOnClickListener(onClickListener)
     }
+
+    private fun selectImage() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
+    private fun uploadUserDataToFirestore(fullName: String, userName: String, description: String) {
+        if (imageUri == null || imageUri!!.path == null) {
+            uploadUserData(fullName, userName, description, null)
+        } else {
+            storageRef.putFile(imageUri!!)
+                .continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
+                    }
+                    storageRef.downloadUrl
+                }
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val imageUrl = task.result.toString()
+                        uploadUserData(fullName, userName, description, imageUrl)
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to upload image", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+    }
+
+    private fun uploadUserData(fullName: String, userName: String, description: String, imageUrl: String?) {
+        val user = hashMapOf(
+            "fullName" to fullName,
+            "userName" to userName,
+            "description" to description,
+            "userImage" to imageUrl
+        )
+
+        val uid = Firebase.auth.currentUser?.uid ?: return
+
+        db.collection("users").document(uid)
+            .set(user, SetOptions.merge()) // merge with existing document
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Data saved successfully", Toast.LENGTH_SHORT).show()
+                replaceFragment(HomeFragment())
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Failed to save data", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
+            imageUri = data.data
+            userImageView.setImageURI(imageUri)
+        }
+    }
+
 
     private fun replaceFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction()
@@ -75,7 +166,6 @@ class UserDataInputFragment : Fragment() {
 
     companion object {
         fun newInstance() = UserDataInputFragment()
+        private const val PICK_IMAGE_REQUEST = 1
     }
-
-
 }
