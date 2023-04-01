@@ -137,6 +137,7 @@ class UserDataInputFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         (activity as MainActivity).showMenuIcon(false)
+        (activity as? MainActivity)?.resetMenu()
     }
 
     override fun onPause() {

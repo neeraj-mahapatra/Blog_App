@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.example.blogapp.MainActivity
 import com.example.blogapp.R
 import com.example.blogapp.databinding.FragmentLogInBinding
@@ -19,72 +20,40 @@ import com.example.blogapp.signup.view.SignUpFragment
 import com.example.blogapp.userDataCollection.view.UserDataInputFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-
+import com.pranavpandey.android.dynamic.toasts.DynamicToast
 
 class LogInFragment : Fragment() {
 
     private var _binding: FragmentLogInBinding? = null
     private val binding get() = _binding!!
-    private lateinit var logIn_Text: TextView
-    private lateinit var logIn_Email: EditText
-    private lateinit var logIn_Password: EditText
-    private lateinit var logIn_Button: Button
+    private lateinit var logInText: TextView
+    private lateinit var logInEmail: EditText
+    private lateinit var logInPassword: EditText
+    private lateinit var logInButton: Button
 
-    private val onClickListener = View.OnClickListener { view ->
+    private val onClickListener = View.OnClickListener setOnClickListener@{ view ->
         when (view) {
-            logIn_Text -> {
-                replaceFragment(SignUpFragment())
+            logInText -> {
+                onLogInTextClicked()
             }
-            logIn_Button -> {
-                val email = binding.logInEmail.text.toString()
-                val password = binding.logInPassword.text.toString()
-
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            // User logged in successfully
-                            val uid = FirebaseAuth.getInstance().currentUser?.uid
-                            val userDocRef = FirebaseFirestore.getInstance().collection("users").document(uid!!)
-                            userDocRef.get().addOnSuccessListener { documentSnapshot ->
-                                val status = documentSnapshot.getBoolean("status")
-                                if (status == false) {
-                                    // Update user status to true in Firestore
-                                    userDocRef.update("status", true)
-                                        .addOnSuccessListener {
-                                            Log.d("message", "User status updated successfully")
-                                        }
-                                        .addOnFailureListener { exception ->
-                                            Log.d("message", "Error updating user status: ${exception.message}")
-                                        }
-                                    replaceFragment(UserDataInputFragment())
-                                } else {
-                                    replaceFragment(HomeFragment())
-                                }
-                            }.addOnFailureListener { exception ->
-                                // Error retrieving user document
-                                Log.d("message", "Error retrieving user document: ${exception.message}")
-                            }
-                        } else {
-                            // Login failed
-                            Log.d("message", "login fail")
-                        }
-                    }
+            logInButton -> {
+                onLogInButtonClicked()
             }
-
         }
     }
 
+
     private fun inits() {
-        logIn_Text = binding.loginText
-        logIn_Email = binding.logInEmail
-        logIn_Password = binding.logInPassword
-        logIn_Button = binding.loginButton
-        logIn_Button.isEnabled = false
+        logInText = binding.loginText
+        logInEmail = binding.logInEmail
+        logInPassword = binding.logInPassword
+        logInButton = binding.loginButton
+        logInButton.isEnabled = false
     }
 
     private fun setListeners() {
-        logIn_Text.setOnClickListener(onClickListener)
-        logIn_Button.setOnClickListener(onClickListener)
+        logInText.setOnClickListener(onClickListener)
+        logInButton.setOnClickListener(onClickListener)
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -92,10 +61,84 @@ class LogInFragment : Fragment() {
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
+    private fun onLogInButtonClicked() {
+        val email = binding.logInEmail.text.toString()
+        val password = binding.logInPassword.text.toString()
+        if (email.isEmpty() || password.isEmpty()) {
+            activity?.let { it1 ->
+                DynamicToast.makeError(
+                    it1,
+                    "Please fill in both email and password fields to continue.",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            return
+        }
+
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // User logged in successfully
+                    val uid = FirebaseAuth.getInstance().currentUser?.uid
+                    val userDocRef = FirebaseFirestore.getInstance().collection("users").document(uid!!)
+                    userDocRef.get().addOnSuccessListener { documentSnapshot ->
+                        val status = documentSnapshot.getBoolean("status")
+                        if (status == false) {
+                            // Update user status to true in Firestore
+                            userDocRef.update("status", true)
+                                .addOnSuccessListener {
+                                    Log.d("message", "User status updated successfully")
+                                }
+                                .addOnFailureListener { exception ->
+                                    Log.d("message", "Error updating user status: ${exception.message}")
+                                }
+                            replaceFragment(UserDataInputFragment())
+                        } else {
+                            replaceFragment(HomeFragment())
+                        }
+                    }.addOnFailureListener { exception ->
+                        // Error retrieving user document
+                        Log.d("message", "Error retrieving user document: ${exception.message}")
+                    }
+                }
+                else {
+                    Log.d("message", "login fail")
+                    val message = task.exception?.message ?: "An unknown error occurred."
+                    when {
+                        message.contains("no user record") -> {
+                            activity?.let { it1 ->
+                                DynamicToast.makeError(
+                                    it1,
+                                    "The email entered is not registered. Please sign up or try again with a registered email.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                        message.contains("password is invalid") -> {
+                            activity?.let { it1 ->
+                                DynamicToast.makeError(
+                                    it1,
+                                    "The password entered is incorrect. Please try again with the correct password.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                        else -> {
+                            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+    }
+
+    private fun onLogInTextClicked() {
+        replaceFragment(SignUpFragment())
+    }
 
     override fun onResume() {
         super.onResume()
         (activity as MainActivity).showMenuIcon(false)
+        (activity as? MainActivity)?.resetMenu()
     }
 
     override fun onPause() {
@@ -133,14 +176,14 @@ class LogInFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                logIn_Button.isEnabled = logIn_Email.text.isNotEmpty() && logIn_Password.text.isNotEmpty()
+                logInButton.isEnabled = logInEmail.text.isNotEmpty() && logInPassword.text.isNotEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         }
-        logIn_Email.addTextChangedListener(textWatcher)
-        logIn_Password.addTextChangedListener(textWatcher)
+        logInEmail.addTextChangedListener(textWatcher)
+        logInPassword.addTextChangedListener(textWatcher)
     }
 
     override fun onDestroy() {

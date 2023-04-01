@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.blogapp.MainActivity
 import com.example.blogapp.R
 import com.example.blogapp.databinding.FragmentHomeBinding
 import com.example.blogapp.login.view.LogInFragment
@@ -18,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var logOut_Button : Button
+    private lateinit var logOut_Button : ImageView
 
     private val onClickListener = View.OnClickListener { view ->
         when (view) {
@@ -35,6 +36,11 @@ class HomeFragment : Fragment() {
 
     private fun setListeners() {
         logOut_Button.setOnClickListener(onClickListener)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as? MainActivity)?.resetMenu()
     }
 
     override fun onCreateView(
