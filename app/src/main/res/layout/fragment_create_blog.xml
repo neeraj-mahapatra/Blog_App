@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/lightest_blue"
+    tools:context=".createBlog.view.CreateBlogFragment"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.055555556" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.08" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.17" />
+
+    <TextView
+        android:id="@+id/user_Create_Blog_Post_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Create Your Blog Post"
+        android:padding="@dimen/density_independent_pixel_4dp"
+        android:textSize="@dimen/text_dimension_20sp"
+        android:fontFamily="@font/satisfy"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline16"
+        app:layout_constraintStart_toStartOf="@+id/guideline14" />
+
+    <EditText
+        android:id="@+id/user_Create_Blog_Post_Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppin"
+        android:gravity="start"
+        android:padding="@dimen/density_independent_pixel_4dp"
+        android:hint="Your blog title goes here"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_dimension_16sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline17"
+        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+        app:layout_constraintStart_toStartOf="@+id/guideline14"
+        app:layout_constraintTop_toTopOf="@+id/guideline16" />
+
+    <EditText
+        android:id="@+id/user_Create_Blog_Post_Description"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:hint="Add you ideas here"
+        android:textColorHint="@color/black"
+        android:padding="@dimen/density_independent_pixel_6dp"
+        android:textSize="@dimen/text_dimension_14sp"
+        android:fontFamily="@font/poppin"
+        android:textColor="@color/black"
+        android:background="@drawable/input_text_shape"
+        app:layout_constraintBottom_toTopOf="@+id/guideline18"
+        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+        app:layout_constraintStart_toStartOf="@+id/guideline14"
+        app:layout_constraintTop_toTopOf="@+id/guideline17" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.72" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.83" />
+
+    <!-- Button to select image -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/user_Create_Blog_Post_Select_Image_Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Select Image"
+        android:padding="@dimen/density_independent_pixel_4dp"
+        android:textSize="@dimen/text_dimension_16sp"
+        android:fontFamily="@font/poppin"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@drawable/rounded_button1"
+        app:layout_constraintTop_toTopOf="@id/guideline18"
+        app:layout_constraintStart_toStartOf="@id/guideline14"
+        app:layout_constraintEnd_toStartOf="@+id/user_Create_Blog_Post_Selected_Image_Preview"
+        app:layout_constraintBottom_toBottomOf="@id/guideline19"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_margin="8dp"/>
+
+    <!-- Thumbnail preview of selected image -->
+    <ImageView
+        android:id="@+id/user_Create_Blog_Post_Selected_Image_Preview"
+        android:layout_width="64dp"
+        android:layout_height="0dp"
+        android:background="@drawable/profile_placeholder"
+        app:layout_constraintTop_toTopOf="@id/guideline18"
+        app:layout_constraintEnd_toEndOf="@id/guideline15"
+        app:layout_constraintBottom_toBottomOf="@id/guideline19"
+        app:layout_constraintStart_toEndOf="@+id/user_Create_Blog_Post_Select_Image_Button"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/user_Create_Blog_Post_Submit_Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/density_independent_pixel_6dp"
+        android:background="@drawable/rounded_button"
+        android:fontFamily="@font/poppin"
+        android:gravity="center"
+        android:padding="@dimen/density_independent_pixel_4dp"
+        android:text="Click Me"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_dimension_16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/guideline15"
+        app:layout_constraintStart_toStartOf="@id/guideline14"
+        app:layout_constraintTop_toTopOf="@+id/guideline19"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/user_Create_Blog_Post_Back_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/density_independent_pixel_16dp"
+        android:layout_marginEnd="@dimen/density_independent_pixel_52dp"
+        android:layout_marginBottom="@dimen/density_independent_pixel_40dp"
+        android:src="@drawable/back_icon"
+        android:color="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

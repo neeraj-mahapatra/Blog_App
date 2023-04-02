@@ -1,7 +1,5 @@
 package com.example.blogapp.userDataCollection.view
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.blogapp.MainActivity
 import com.example.blogapp.R
 import com.example.blogapp.databinding.FragmentUserDataInputBinding
@@ -34,7 +33,14 @@ class UserDataInputFragment : Fragment() {
     private lateinit var storageRef: StorageReference
     private lateinit var db: FirebaseFirestore
     private var imageUri: Uri? = null // stores the selected image Uri
-
+    private val pickImage =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            // Handle the returned Uri here
+            if (uri != null) {
+                imageUri = uri
+                userImageView.setImageURI(imageUri)
+            }
+        }
 
     private val onClickListener = View.OnClickListener { view ->
         when (view) {
@@ -68,9 +74,7 @@ class UserDataInputFragment : Fragment() {
     }
 
     private fun selectImage() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
-        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+        pickImage.launch("image/*")
     }
 
     private fun uploadUserDataToFirestore(fullName: String, userName: String, description: String) {
@@ -117,17 +121,6 @@ class UserDataInputFragment : Fragment() {
                 Toast.makeText(requireContext(), "Failed to save data", Toast.LENGTH_SHORT).show()
             }
     }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
-            imageUri = data.data
-            userImageView.setImageURI(imageUri)
-        }
-    }
-
-
     private fun replaceFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
@@ -161,12 +154,4 @@ class UserDataInputFragment : Fragment() {
         setListeners()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    companion object {
-        fun newInstance() = UserDataInputFragment()
-        private const val PICK_IMAGE_REQUEST = 1
-    }
 }

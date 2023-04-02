@@ -6,17 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.blogapp.MainActivity
 import com.example.blogapp.R
-import com.example.blogapp.databinding.FragmentHomeBinding
 import com.example.blogapp.databinding.FragmentProfileBinding
 import com.example.blogapp.home.view.HomeFragment
-import com.example.blogapp.login.view.LogInFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -77,9 +74,8 @@ class ProfileFragment : Fragment() {
 
             val db = FirebaseFirestore.getInstance()
             val usersCollection = db.collection("users")
-            val userUid = uid // replace with the actual UID value
 
-            usersCollection.whereEqualTo("uid", userUid).get()
+            usersCollection.whereEqualTo("uid", uid).get()
                 .addOnSuccessListener { documents ->
                     for (document in documents) {
                         val username = document.getString("userName")
@@ -101,21 +97,13 @@ class ProfileFragment : Fragment() {
                     Log.d("message", "Unable to get data")
                 }
 
-        } else {
-
         }
-
-
     }
 
     private fun replaceFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
             .commit()
     }
-
-    companion object {
-        fun newInstance() = ProfileFragment()
-    }
-
 }

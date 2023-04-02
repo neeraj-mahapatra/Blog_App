@@ -57,9 +57,11 @@ class LogInFragment : Fragment() {
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+        if (isAdded) {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        }
     }
     private fun onLogInButtonClicked() {
         val email = binding.logInEmail.text.toString()
@@ -134,7 +136,6 @@ class LogInFragment : Fragment() {
     private fun onLogInTextClicked() {
         replaceFragment(SignUpFragment())
     }
-
     override fun onResume() {
         super.onResume()
         (activity as MainActivity).showMenuIcon(false)
@@ -146,14 +147,6 @@ class LogInFragment : Fragment() {
         (activity as MainActivity).showMenuIcon(true)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Check if user is already logged in
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if(currentUser!=null) {
-            replaceFragment(HomeFragment())
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -185,13 +178,4 @@ class LogInFragment : Fragment() {
         logInEmail.addTextChangedListener(textWatcher)
         logInPassword.addTextChangedListener(textWatcher)
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    companion object {
-        fun newInstance() = LogInFragment()
-    }
-
 }

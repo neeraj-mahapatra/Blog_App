@@ -85,6 +85,7 @@ class SignUpFragment : Fragment() {
                         .set(userData)
                         .addOnSuccessListener {
                             Log.d("message", "User data added to Firestore")
+                            context?.let { it1 -> DynamicToast.makeSuccess(it1, "Signed Up Successfully...").show() }
                             replaceFragment(LogInFragment())
                         }
                         .addOnFailureListener { e ->
@@ -171,13 +172,4 @@ class SignUpFragment : Fragment() {
         signUpEmail.addTextChangedListener(textWatcher)
         signUpPassword.addTextChangedListener(textWatcher)
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    companion object {
-        fun newInstance() = SignUpFragment()
-    }
-
 }

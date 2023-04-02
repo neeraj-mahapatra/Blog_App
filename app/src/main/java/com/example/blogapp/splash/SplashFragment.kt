@@ -13,7 +13,6 @@ import com.example.blogapp.MainActivity
 import com.example.blogapp.R
 import com.example.blogapp.databinding.FragmentSplashBinding
 import com.example.blogapp.login.view.LogInFragment
-import com.google.firebase.auth.FirebaseAuth
 
 
 class SplashFragment : Fragment() {
@@ -22,11 +21,6 @@ class SplashFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var imageView: ImageView
     private lateinit var menuIcon: ImageView
-
-    private val onClickListener = View.OnClickListener { view ->
-        when (view) {
-        }
-    }
 
     private fun inits() {
         imageView = binding.splashImage
@@ -69,12 +63,4 @@ class SplashFragment : Fragment() {
         splashAnimation()
     }
 
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    companion object {
-        fun newInstance() = SplashFragment()
-    }
 }
