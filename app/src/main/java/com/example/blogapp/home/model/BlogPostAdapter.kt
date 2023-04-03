@@ -15,11 +15,15 @@ import java.util.*
 class BlogPostAdapter(private val blogPosts: List<BlogPost>) :
     RecyclerView.Adapter<BlogPostAdapter.ViewHolder>() {
 
+    var onItemClickListener: ((BlogPost) -> Unit)? = null
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val creatorTextView: TextView = itemView.findViewById(R.id.creatorTextView)
         val createdAtTextView: TextView = itemView.findViewById(R.id.createdAtTextView)
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,6 +40,10 @@ class BlogPostAdapter(private val blogPosts: List<BlogPost>) :
         holder.createdAtTextView.text = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
             .format(blogPost.createdAt)
         Picasso.get().load(blogPost.imageUrl).fit().into(holder.imageView)
+
+        holder.itemView.setOnClickListener {
+            onItemClickListener?.invoke(blogPost)
+        }
     }
 
     override fun getItemCount(): Int {

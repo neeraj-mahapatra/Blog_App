@@ -11,4 +11,11 @@
     <string name="error_auth_failed">Authentication failed. Please check your email and password and try again.</string>
     <string name="error_weak_password">Your password should be at least 6 characters long.</string>
     <string name="error_user_exists">An account with this email address already exists.</string>
+    <string name="user_intoduction">Tell some short introduction about you</string>
+    <string name="submit_my_details">Submit my Details</string>
+    <string name="enter_user_name">Enter User Name</string>
+    <string name="upload_your_image">(Upload your image)</string>
+    <string name="enter_your_full_name">Enter Your Full Name</string>
+    <string name="let_us_know_you_better">Let us know you better...</string>
+    <string name="this_is_placeholder_for_user_to_upload_his_profile_image">This is placeholder for user to upload his profile Image</string>
 </resources>

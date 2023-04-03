@@ -125,7 +125,6 @@
         android:id="@+id/user_Create_Blog_Post_Selected_Image_Preview"
         android:layout_width="64dp"
         android:layout_height="0dp"
-        android:background="@drawable/profile_placeholder"
         app:layout_constraintTop_toTopOf="@id/guideline18"
         app:layout_constraintEnd_toEndOf="@id/guideline15"
         app:layout_constraintBottom_toBottomOf="@id/guideline19"

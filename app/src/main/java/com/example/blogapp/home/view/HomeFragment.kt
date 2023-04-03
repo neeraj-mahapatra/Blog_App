@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blogapp.MainActivity
 import com.example.blogapp.R
+import com.example.blogapp.blogsDetail.view.BlogPostDetailFragment
 import com.example.blogapp.databinding.FragmentHomeBinding
 import com.example.blogapp.home.model.BlogPost
 import com.example.blogapp.home.model.BlogPostAdapter
@@ -128,6 +129,14 @@ class HomeFragment : Fragment() {
             addItemDecoration(ItemOffsetDecoration(16))
         }
 
+        blogPostAdapter.onItemClickListener = { blogPost ->
+            val args = Bundle()
+            args.putParcelable("blogPost", blogPost)
+            val blogPostDetailFragment = BlogPostDetailFragment()
+            blogPostDetailFragment.arguments = args
+            replaceFragment(blogPostDetailFragment)
+        }
+
         db.collection("blogs")
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .get()
@@ -137,6 +146,7 @@ class HomeFragment : Fragment() {
                     val title = document.getString("title") ?: ""
                     val imageUrl = document.getString("imageUrl") ?: ""
                     val createdAt = document.getDate("createdAt") ?: Date()
+                    val description = document.getString("description") ?: ""
 
                     usersRef.document(uid).get()
                         .addOnSuccessListener { userDocument ->
@@ -146,7 +156,8 @@ class HomeFragment : Fragment() {
                                     title = title,
                                     imageUrl = imageUrl,
                                     creatorName = creatorName,
-                                    createdAt = createdAt
+                                    createdAt = createdAt,
+                                    description = description
                                 )
                                 blogPosts.add(blogPost)
                                 blogPostAdapter.notifyDataSetChanged()
@@ -168,6 +179,7 @@ class HomeFragment : Fragment() {
     private fun replaceFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
             .commit()
     }
 
