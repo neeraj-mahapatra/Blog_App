@@ -20,6 +20,7 @@ import com.example.blogapp.signup.view.SignUpFragment
 import com.example.blogapp.userDataCollection.view.UserDataInputFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
 
 class LogInFragment : Fragment() {
@@ -30,6 +31,7 @@ class LogInFragment : Fragment() {
     private lateinit var logInEmail: EditText
     private lateinit var logInPassword: EditText
     private lateinit var logInButton: Button
+    private val remoteConfig = FirebaseRemoteConfig.getInstance()
 
     private val onClickListener = View.OnClickListener setOnClickListener@{ view ->
         when (view) {
@@ -153,7 +155,23 @@ class LogInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLogInBinding.inflate(inflater, container, false)
+        updateDataFromRemoteConfig()
         return (binding.root)
+    }
+
+    private fun updateDataFromRemoteConfig() {
+        remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val logInButtonText = remoteConfig.getString("log_in_button")
+                val logInEmailHint = remoteConfig.getString("log_in_email_hint")
+                val logInPasswordHint = remoteConfig.getString("log_in_password_hint")
+                val logInText = remoteConfig.getString("log_in_text")
+                logInButton.text = logInButtonText
+                logInEmail.hint = logInEmailHint
+                logInPassword.hint = logInPasswordHint
+                binding.loginText.text = logInText
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

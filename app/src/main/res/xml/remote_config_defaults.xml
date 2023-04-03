@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>log_in_button</key>
+        <value>Log In</value>
+        <key>log_in_email_hint</key>
+        <value>Enter your Email</value>
+        <key>log_in_password_hint</key>
+        <value>Enter Your Password</value>
+        <key>log_in_text</key>
+        <value>Haven't joined us! Click to Join Us</value>
+
+        <key>sign_up_button</key>
+        <value>Sign Up</value>
+        <key>sign_up_email_hint</key>
+        <value>Please Enter your Email</value>
+        <key>sign_up_in_text</key>
+        <value>Already a member Click to Log In</value>
+        <key>sign_up_password_hint</key>
+        <value>Please Enter Your Password</value>
+
+    </entry>
+</defaultsMap>

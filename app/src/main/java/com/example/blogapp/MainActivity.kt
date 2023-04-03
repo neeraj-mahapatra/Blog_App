@@ -9,6 +9,9 @@ import com.example.blogapp.createBlog.view.CreateBlogFragment
 import com.example.blogapp.databinding.ActivityMainBinding
 import com.example.blogapp.profile.view.ProfileFragment
 import com.example.blogapp.splash.SplashFragment
+import com.google.firebase.FirebaseApp
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 
 class MainActivity : AppCompatActivity() {
 
@@ -62,9 +65,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        firebaseRemoteConfigSetUp()
         inits()
         setListeners()
         replaceFragment(SplashFragment())
+    }
+
+    private fun firebaseRemoteConfigSetUp() {
+        FirebaseApp.initializeApp(this)
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
+
+        // Set default values for Remote Config parameters
+        val configSettings = FirebaseRemoteConfigSettings.Builder()
+            .setMinimumFetchIntervalInSeconds(0)
+            .build()
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
     }
 
 
