@@ -18,4 +18,5 @@
     <string name="enter_your_full_name">Enter Your Full Name</string>
     <string name="let_us_know_you_better">Let us know you better...</string>
     <string name="this_is_placeholder_for_user_to_upload_his_profile_image">This is placeholder for user to upload his profile Image</string>
+    <string name="welcome_text">These are some top blogs for you..</string>
 </resources>

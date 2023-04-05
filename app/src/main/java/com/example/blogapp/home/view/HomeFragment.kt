@@ -20,6 +20,7 @@ import com.example.blogapp.home.model.BlogPostAdapter
 import com.example.blogapp.login.view.LogInFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.Query
 import java.util.*
 

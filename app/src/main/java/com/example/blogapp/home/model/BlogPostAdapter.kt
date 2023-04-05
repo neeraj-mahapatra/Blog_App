@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BlogPostAdapter(private val blogPosts: List<BlogPost>) :
+class BlogPostAdapter(private var blogPosts: List<BlogPost>) :
     RecyclerView.Adapter<BlogPostAdapter.ViewHolder>() {
 
     var onItemClickListener: ((BlogPost) -> Unit)? = null

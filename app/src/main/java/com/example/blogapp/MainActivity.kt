@@ -10,6 +10,7 @@ import com.example.blogapp.databinding.ActivityMainBinding
 import com.example.blogapp.profile.view.ProfileFragment
 import com.example.blogapp.splash.SplashFragment
 import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 
@@ -68,8 +69,13 @@ class MainActivity : AppCompatActivity() {
 
         firebaseRemoteConfigSetUp()
         inits()
+
+
+
         setListeners()
         replaceFragment(SplashFragment())
+
+
     }
 
     private fun firebaseRemoteConfigSetUp() {
@@ -82,6 +88,7 @@ class MainActivity : AppCompatActivity() {
             .build()
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+
     }
 
 
